@@ -1,0 +1,121 @@
+
+Welcome! This is Rabak, a backup tool
+
+
+What's Rabak?
+=============
+
+Rabak is a reliable rsync based backup system, simple to configure,
+simple to run, simple to restore data with.
+
+Rabak's strategy is to always make full backups, usually to one or more
+attached external hard drives. Using rsync's clever hard linking abilities,
+the resulting backups use up little target space. Rabak uses simple and
+flexible configuration files and supports backup to or from remote machines.
+It even supports remote to remote backup (think remote control).
+
+Rabak is very good for unattended safe remote backups, and has support
+for postgresql and mysql backups via database dump streaming.
+
+It's simple to configure different, multiple sources for one backup set.
+There's support for file filters that hide the complexity of the rsync filters
+(and make them actually usable).
+
+
+Requirements
+============
+
+You need Linux or Cygwin (Notice: On Cygwin pathes may not exceed 260 characters). Other plattforms may work too. We didn't try.
+
+You need rsync. I know rabak doesn't work before version 2.6.4. Maybe even a newer one is required. The newer the better.
+
+You need Perl, I don't know which version. Probably >= 5.8
+
+You need the Mail::Send, Getopt::Long(>= 2.36), and IPC::Run perl modules. Fetch it from CPAN:
+cpan -i Mail::Send (or cpan -i MailTools)
+cpan -i IPC::Run
+cpan -i Getopt::Long
+
+To use dupmerge, you will need the Digest::SHA1 and DBD::SQLite perl modules. To install it do:
+cpan -i Digest::SHA1
+cpan -i DBD::SQLite
+
+
+Installation
+============
+
+Extract the files in rabak's archive to a temporary directory and install Rabak's perl library.
+cd rabak-<version>
+perl Makefile.PL
+make
+make install
+
+Now you may copy the rabak script itself into your execution path and sample config files to /etc.
+cp -p bin/rabak /usr/local/bin/
+mkdir /etc/rabak
+cp -p etc/* /etc/rabak/
+
+
+Quick Start
+===========
+
+Look at rabak's help:
+rabak help
+
+Make a test backup:
+rabak backup -c examples/rabak.simple.cf example
+
+Have a look at the result:
+ls -lA examples/example-backup/rabak/
+
+Read the documentation:
+rabak doc | more
+
+Configure Rabak:
+cp /etc/rabak/rabak.sample.cf /etc/rabak/rabak.cf
+nano -w /etc/rabak/rabak.cf
+
+
+Feature Tests
+=============
+
+If you have the right to run mount and mknod, you can test more features by doing:
+sh ./stuff/sample-env-make
+
+This produces a test environment in /tmp/rabak-sample-data. Data will be backed up
+into /tmp/rabak-sample-backup. You can run the sample configurations provided in
+rabak.sample.cf:
+
+rabak -c rabak.sample.cf backup sample_firstof
+rabak -c rabak.sample.cf -i Tue backup sample_targetgroup
+rabak -c rabak.sample.cf -i Tue2 backup sample_targetgroup
+
+When you're done, you can remove the test environment:
+sh ./stuff/sample-env-remove
+
+Check out the docs and the *.cf files for more insight. 
+
+Further reading
+===============
+
+Documentation is available through rabak itself:
+./rabak doc
+
+The home page is http://www.raisin.de/rabak
+
+
+Developers
+==========
+You can extend Rabak and add backup types. Have a look into
+the Rabak/Type directory.
+
+
+Have fun!
+Stephan Hantigk rabak@steppicrew.de (Main developer)
+Dietrich Raisin info1@raisin.de (Initial developer) 
+
+
+License
+=======
+
+See the LICENSE file.
